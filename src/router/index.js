@@ -6,6 +6,7 @@ const DefaultContainer = () => import("@/containers/DefaultContainer");
 
 // Pages
 const Overview = () => import("@/views/Overview");
+const Patients = () => import("@/views/Patients");
 
 // Shared Pages
 const Page404 = () => import("@/views/Page404");
@@ -25,6 +26,11 @@ export default new Router({
           path: "/overview",
           name: "Overview",
           component: Overview,
+        },
+        {
+          path: "/patients",
+          name: "Patients",
+          component: Patients,
         },
       ],
     },

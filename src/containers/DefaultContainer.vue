@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <Header />
-    <Sidebar />
+    <Sidebar :route="$router.currentRoute.path" />
     <main class="main">
       <div class="px-5">
         <router-view></router-view>

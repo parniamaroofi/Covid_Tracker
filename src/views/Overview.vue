@@ -95,7 +95,7 @@ export default {
             position: "top",
             labels: {
               font: {
-                family: "Tahoma",
+                family: "Arial",
               },
               boxWidth: 25,
               boxHeight: 8,
@@ -103,10 +103,10 @@ export default {
           },
           tooltip: {
             titleFont: {
-              family: "Tahoma",
+              family: "Arial",
             },
             bodyFont: {
-              family: "Tahoma",
+              family: "Arial",
             },
           },
         },
@@ -128,7 +128,7 @@ export default {
               label: "میزان درآمد (هزار تومان)",
               stepSize: 100,
               beginAtZero: true,
-              font: { family: "Tahoma", size: 13 },
+              font: { family: "Arial", size: 13 },
             },
             stacked: true,
           },
@@ -136,7 +136,7 @@ export default {
             stacked: true,
             ticks: {
               font: {
-                family: "Tahoma",
+                family: "Arial",
                 size: 13,
               },
             },

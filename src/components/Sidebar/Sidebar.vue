@@ -10,9 +10,7 @@
           <router-link style="text-decoration: none" :to="item.url">
             <div
               class="item-div"
-              :class="
-                $router.currentRoute.path.includes(item.url) ? 'active' : ''
-              "
+              :class="route.includes(item.url) ? 'active' : ''"
             >
               <v-icon class="pr-6">{{ item.icon }}</v-icon>
               <span>{{ item.name }}</span>
@@ -29,13 +27,16 @@ import nav from "@/_nav";
 
 export default {
   name: "Sidebar",
+  props: ["route"],
   data() {
     return {
       nav: [],
+      reactivity: false,
     };
   },
   mounted() {
     this.nav = nav.sidebar;
+    this.reactivity = !this.reactivity;
   },
 };
 </script>

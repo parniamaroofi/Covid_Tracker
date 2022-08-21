@@ -1,8 +1,23 @@
 @font-face {
-    font-family: Mulish;
-    src: url("/Mulish-Light.ttf");
+  font-family: Mulish;
+  src: url("/Mulish-Light.ttf");
 }
 *,
 body {
-    font-family: Mulish !important;
+  font-family: Mulish !important;
+}
+
+.custom-table {
+  table thead tr th {
+    font-size: 0.95rem !important;
+    color: #b1b5c2 !important;
+  }
+  table tbody tr td {
+    padding: 20px 10px !important;
+  }
+  table tbody tr {
+    &:hover {
+      background-color: #fff !important;
+    }
+  }
 }
