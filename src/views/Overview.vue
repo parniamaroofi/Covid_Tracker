@@ -7,7 +7,6 @@
         color="#555555"
         class="mx-auto"
       />
-      <p class="text-center mt-4 font-weight-bold">Loading...</p>
     </div>
     <div v-else>
       <v-row>
@@ -45,7 +44,7 @@
         </v-col>
       </v-row>
       <div class="chart mt-5">
-        <h3 class="text-center">Total Covid19 Graph</h3>
+        <h3 class="text-center">Covid19 Active Graph</h3>
         <Chart
           name="lineChart"
           type="line"
@@ -78,7 +77,7 @@ export default {
         labels: [],
         datasets: [
           {
-            label: "Population",
+            label: "",
             data: [],
             backgroundColor: "#3853ff18",
             borderColor: "#3751FF",
@@ -88,6 +87,13 @@ export default {
       optionsLine: {
         responsive: true,
         maintainAspectRatio: true,
+        fill: true,
+        elements: {
+          point: {
+            pointStyle: false,
+            radius: 0,
+          },
+        },
         plugins: {
           legend: {
             rtl: true,
@@ -130,6 +136,9 @@ export default {
               beginAtZero: true,
               font: { family: "Arial", size: 13 },
             },
+            grid: {
+              display: false,
+            },
             stacked: true,
           },
           x: {
@@ -139,6 +148,9 @@ export default {
                 family: "Arial",
                 size: 13,
               },
+            },
+            grid: {
+              display: false,
             },
           },
         },
@@ -164,6 +176,7 @@ export default {
             let total = this.countries[cnt].TotalConfirmed;
             this.chartData.datasets[0].data.push(total);
           }
+          this.chartData.datasets[0].cubicInterpolationMode = "monotone";
           setTimeout(() => {
             this.showChart = true;
             this.loading = false;
@@ -192,7 +205,7 @@ export default {
 }
 .box {
   background-color: white;
-  border: 1px solid #dfe0eb;
+  border: 1px solid #fff;
   border-radius: 12px;
   width: 99%;
   height: 140px;
@@ -222,7 +235,7 @@ export default {
   padding: 20px 15px 15px;
   width: 100%;
   background-color: white;
-  border: 1px solid #dfe0eb;
+  border: 1px solid #fff;
   border-radius: 8px;
 }
 </style>

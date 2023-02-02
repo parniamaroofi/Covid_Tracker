@@ -3,9 +3,24 @@
     <div class="card">
       <div class="title">
         <span>All patients</span>
+        <!-- <div class="mt-6">
+          <v-select
+            outlined
+            rounded
+            dense
+            label="Infection Level Filter"
+            :items="levels"
+            v-model="levelFilter"
+            style="width: 250px"
+          ></v-select>
+        </div> -->
       </div>
       <div class="custom-table">
-        <v-data-table :headers="headers" :items="patients" hide-default-footer>
+        <v-data-table
+          :headers="headers"
+          :items="computedItems"
+          hide-default-footer
+        >
           <template v-slot:[`item.userimage`]="{ item }">
             <div class="d-flex">
               <img :src="item.userimage" class="user-image" />
@@ -18,13 +33,17 @@
           <template v-slot:[`item.city`]="{ item }">
             <div>
               <p class="mb-0 font-weight-bold">{{ item.city }}</p>
-              <span class="user-bd">{{ item.birthday }}</span>
+              <span class="user-bd">{{
+                dateFormatConverter(item.birthday)
+              }}</span>
             </div>
           </template>
-          <template v-slot:[`item.regdate`]="{ item }">
+          <template v-slot:[`item.date`]="{ item }">
             <div>
-              <p class="mb-0 font-weight-bold">{{ item.regdate }}</p>
-              <span class="reg-time">{{ item.regtime }}</span>
+              <p class="mb-0 font-weight-bold">
+                {{ dateFormatConverter(item.date) }}
+              </p>
+              <span class="reg-time">{{ timeFormatConverter(item.time) }}</span>
             </div>
           </template>
           <template v-slot:[`item.level`]="{ item }">
@@ -32,9 +51,9 @@
               <div
                 class="badge-box"
                 :class="{
-                  redcolor: item.level == 'high',
-                  yellowcolor: item.level == 'low',
-                  greencolor: item.level == 'normal',
+                  redcolor: item.level == 'High',
+                  yellowcolor: item.level == 'Low',
+                  greencolor: item.level == 'Normal',
                 }"
               >
                 {{ item.level }}
@@ -48,19 +67,21 @@
 </template>
 
 <script>
+import moment from "moment-jalaali";
 export default {
   data() {
     return {
+      moment: moment,
       patients: [
         {
           userimage: "/no-photo.png",
           username: "Sidney E. Harris",
           lastupdate: "Updated 1 day ago",
           city: "London",
-          birthday: "July 19, 1989",
-          regdate: "May 26, 2020",
-          regtime: "6:30 PM",
-          level: "high",
+          birthday: "1989-07-19",
+          date: "2020-05-26",
+          time: "18:30",
+          level: "High",
         },
 
         {
@@ -68,10 +89,10 @@ export default {
           username: "Juliane Klein",
           lastupdate: "Updated 1 day ago",
           city: "Berlin",
-          birthday: "February 5, 1952",
-          regdate: "May 26, 2020",
-          regtime: "8:00 AM",
-          level: "low",
+          birthday: "1952-02-5",
+          date: "2020-05-26",
+          time: "08:00",
+          level: "Low",
         },
 
         {
@@ -79,10 +100,10 @@ export default {
           username: "Sarah Fiedler",
           lastupdate: "Updated 1 day ago",
           city: "New York",
-          birthday: "June 3, 1978",
-          regdate: "May 26, 2020",
-          regtime: "7:30 AM",
-          level: "high",
+          birthday: "1978-06-03",
+          date: "2020-05-26",
+          time: "07:30",
+          level: "High",
         },
 
         {
@@ -90,10 +111,10 @@ export default {
           username: "Hamed Noori",
           lastupdate: "Updated 1 day ago",
           city: "Tehran",
-          birthday: "August 10, 1982",
-          regdate: "May 25, 2020",
-          regtime: "5:00 PM",
-          level: "normal",
+          birthday: "1982-08-10",
+          date: "2020-05-25",
+          time: "17:00",
+          level: "Normal",
         },
 
         {
@@ -101,10 +122,10 @@ export default {
           username: "Chappell Brasseur",
           lastupdate: "Updated 2 day ago",
           city: "Paris",
-          birthday: "April 12, 2000",
-          regdate: "May 25, 2020",
-          regtime: "4:30 PM",
-          level: "high",
+          birthday: "2000-04-12",
+          date: "2020-05-25",
+          time: "16:30",
+          level: "High",
         },
 
         {
@@ -112,20 +133,71 @@ export default {
           username: "Michael M. Gauna",
           lastupdate: "Updated 3 day ago",
           city: "Los Angeles",
-          birthday: "January 26, 1970",
-          regdate: "May 25, 2020",
-          regtime: "2:00 PM",
-          level: "normal",
+          birthday: "1970-01-26",
+          date: "2020-05-25",
+          time: "14:00",
+          level: "Normal",
         },
       ],
 
       headers: [
         { text: "User Details", value: "userimage", sortable: false },
         { text: "Birth Details", value: "city", sortable: false },
-        { text: "Registeration Date", value: "regdate", sortable: false },
+        { text: "Registeration Date", value: "date", sortable: false },
         { text: "Infection Level", value: "level", sortable: false },
       ],
+
+      levels: ["All", "High", "Normal", "Low"],
+      levelFilter: "All",
+      monthsName: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ],
     };
+  },
+  methods: {
+    dateFormatConverter(date) {
+      let year = date.split("-")[0];
+      let month = date.split("-")[1];
+      let day = date.split("-")[2];
+      let monthName;
+      monthName = this.monthsName[Number(month) - 1];
+      return monthName + " " + day + ", " + year;
+    },
+    timeFormatConverter(time) {
+      let hour = time.split(":")[0];
+      let min = time.split(":")[1];
+      if (Number(hour) > 0 && Number(hour) <= 12) {
+        return hour + ":" + min + " AM";
+      } else {
+        let formattedHour = Number(hour) - 12;
+        if (formattedHour > 0 && formattedHour < 10) {
+          formattedHour = "0" + formattedHour;
+        }
+        return formattedHour + ":" + min + " PM";
+      }
+    },
+  },
+  computed: {
+    computedItems() {
+      let filtered = [];
+      if (this.levelFilter == "All") {
+        filtered = this.patients;
+      } else {
+        filtered = this.patients.filter((x) => x.level == this.levelFilter);
+      }
+      return filtered;
+    },
   },
 };
 </script>
@@ -135,7 +207,6 @@ export default {
   padding: 10px;
   width: 100%;
   background-color: white;
-  border: 1px solid #dfe0eb;
   border-radius: 8px;
 
   .title {
@@ -159,12 +230,10 @@ export default {
 }
 .badge-box {
   color: #fff;
-  font-size: 13px;
-  font-weight: bold;
+  font-size: 12px;
   border-radius: 15px;
   width: 60px;
   text-align: center;
-
   padding: 3px 0px;
 }
 .redcolor {
@@ -177,5 +246,10 @@ export default {
 
 .greencolor {
   background-color: #29cc97;
+}
+th {
+  span {
+    font-size: 0.85rem !important;
+  }
 }
 </style>
