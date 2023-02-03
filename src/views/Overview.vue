@@ -1,8 +1,8 @@
 <template>
   <div class="overview">
     <div v-if="loading" class="w-100 d-flex flex-column mt-10">
-      <orbit-spinner
-        :animation-duration="1200"
+      <semipolar-spinner
+        :animation-duration="1500"
         :size="70"
         color="#555555"
         class="mx-auto"
@@ -10,41 +10,29 @@
     </div>
     <div v-else>
       <v-row>
-        <v-col md="3" sm="6" cols="12">
-          <div class="box">
-            <p class="box-title">Total</p>
+        <v-col
+          v-for="(item, index) in items"
+          :key="index"
+          md="3"
+          sm="6"
+          cols="12"
+        >
+          <div
+            class="box pointer"
+            :class="selected == item ? 'bold-box' : ''"
+            @click="selectItem(item)"
+          >
+            <p class="box-title text-capitalize">{{ item }}</p>
             <span class="box-number">{{
-              Number(myData.total).toLocaleString()
-            }}</span>
-          </div>
-        </v-col>
-        <v-col md="3" sm="6" cols="12">
-          <div class="box bold-box">
-            <p class="box-title">Active</p>
-            <span class="box-number">{{
-              Number(myData.active).toLocaleString()
-            }}</span>
-          </div>
-        </v-col>
-        <v-col md="3" sm="6" cols="12">
-          <div class="box">
-            <p class="box-title">Recovered</p>
-            <span class="box-number">{{
-              Number(myData.recovered).toLocaleString()
-            }}</span>
-          </div>
-        </v-col>
-        <v-col md="3" sm="6" cols="12">
-          <div class="box">
-            <p class="box-title">Death</p>
-            <span class="box-number">{{
-              Number(myData.death).toLocaleString()
+              Number(myData[item]).toLocaleString()
             }}</span>
           </div>
         </v-col>
       </v-row>
-      <div class="chart mt-5">
-        <h3 class="text-center">Covid19 Active Graph</h3>
+      <div class="chart mt-5" v-if="showChart">
+        <h3 class="text-center">
+          Covid19 <span class="text-capitalize">{{ selected }}</span> Graph
+        </h3>
         <Chart
           name="lineChart"
           type="line"
@@ -60,19 +48,21 @@
 </template>
 <script>
 const Chart = () => import("@/components/Chart/Chart");
-import { OrbitSpinner } from "epic-spinners";
+import { SemipolarSpinner } from "epic-spinners";
 export default {
   components: {
     Chart,
-    OrbitSpinner,
+    SemipolarSpinner,
   },
   data() {
     return {
       loading: false,
       showChart: false,
+      selected: "total",
       response: {},
       countries: [],
       myData: {},
+      items: ["total", "active", "recovered", "death"],
       chartData: {
         labels: [],
         datasets: [
@@ -169,24 +159,65 @@ export default {
           this.myData.active = this.response.Global.NewConfirmed;
           this.myData.recovered = this.response.Global.TotalRecovered;
           this.myData.death = this.response.Global.TotalDeaths;
-          for (let cnt in this.countries) {
-            let countryName = this.countries[cnt].Country;
-            this.chartData.labels.push(countryName);
+          this.getCartData(this.selected);
 
-            let total = this.countries[cnt].TotalConfirmed;
-            this.chartData.datasets[0].data.push(total);
-          }
-          this.chartData.datasets[0].cubicInterpolationMode = "monotone";
           setTimeout(() => {
             this.showChart = true;
             this.loading = false;
-          }, 500);
+          }, 100);
         })
         .catch((err) => {
           console.log(err);
           this.toast("خطا: " + err.response.data, "error");
           this.loading = false;
         });
+    },
+    getCartData(selected) {
+      this.showChart = false;
+      let variable;
+      switch (selected) {
+        case "total":
+          variable = "TotalConfirmed";
+          break;
+        case "active":
+          variable = "NewConfirmed";
+          break;
+        case "recovered":
+          variable = "TotalRecovered";
+          break;
+        case "death":
+          variable = "TotalDeaths";
+          break;
+
+        default:
+          break;
+      }
+      this.chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "",
+            data: [],
+            backgroundColor: "#3853ff18",
+            borderColor: "#3751FF",
+          },
+        ],
+      };
+      for (let cnt in this.countries) {
+        let countryName = this.countries[cnt].Country;
+        this.chartData.labels.push(countryName);
+
+        let data = this.countries[cnt][variable];
+        this.chartData.datasets[0].data.push(data);
+      }
+      this.chartData.datasets[0].cubicInterpolationMode = "monotone";
+      setTimeout(() => {
+        this.showChart = true;
+      }, 100);
+    },
+    selectItem(item) {
+      this.selected = item;
+      this.getCartData(item);
     },
   },
   mounted() {
@@ -210,6 +241,52 @@ export default {
   width: 99%;
   height: 140px;
   text-align: center;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+    border-radius: 12px;
+    border: 8px solid transparent;
+    box-sizing: border-box;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 0;
+    width: 0;
+    border-radius: 12px;
+    border: 8px solid transparent;
+    box-sizing: border-box;
+  }
+
+  &:hover {
+    &::before {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      border-right: 0;
+      border-bottom: 0;
+      transition: height 0.2s linear, width 0.2s linear 0.2s;
+    }
+    &::after {
+      width: 100%;
+      height: 100%;
+      border: 3px solid #ccc;
+      border-radius: 12px;
+      border-left: 0;
+      border-top: 0;
+      transition: height 0.2s linear, width 0.2s linear 0.2s;
+    }
+  }
 
   &-title {
     font-size: 22px;
@@ -224,10 +301,14 @@ export default {
   }
 
   &.bold-box {
-    border: 1px solid #3751ff;
+    border: 3px solid #3751ff;
     .box-title,
     .box-number {
       color: #3751ff;
+    }
+    &::before,
+    &::after {
+      display: none !important;
     }
   }
 }
