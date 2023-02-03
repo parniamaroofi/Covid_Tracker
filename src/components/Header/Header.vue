@@ -5,10 +5,10 @@
         <div class="profile-image">
           <img :src="userProfile" />
         </div>
-        <div class="pa-5">
+        <div class="userName pa-5">
           <b>{{ userName }}</b>
         </div>
-        <v-divider vertical class="my-2 mx-3"></v-divider>
+        <v-divider vertical class="mt-1 mb-2 mx-3"></v-divider>
         <div class="alert">
           <v-icon class="alert-icon mx-5">$Alert</v-icon>
           <div class="alert-number">{{ notifNumber }}</div>
@@ -39,12 +39,18 @@ export default {
   width: calc(100vw - 290px);
   padding: 20px;
   .profile-image {
-    width: 55px;
-    height: 55px;
+    width: 53px;
+    height: 53px;
     img {
       width: 100%;
       height: 100%;
       border-radius: 50px;
+    }
+  }
+  .userName {
+    transform: translateY(-4px);
+    b {
+      font-size: 0.95rem;
     }
   }
 
@@ -57,11 +63,11 @@ export default {
       position: absolute;
       top: 9px;
       right: 11px;
-      min-width: 20px;
-      height: 20px;
+      min-width: 19px;
+      height: 19px;
       border-radius: 50%;
       color: #faebd7;
-      font-size: 13px;
+      font-size: 12px;
       display: flex;
       align-content: center;
       justify-content: center;

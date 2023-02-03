@@ -1,43 +1,38 @@
 <template>
-  <div>
+  <div class="patients">
+    <!-- Main card -->
     <div class="card">
+      <!-- Card title -->
       <div class="title">
         <span>All patients</span>
-        <!-- <div class="mt-6">
-          <v-select
-            outlined
-            rounded
-            dense
-            label="Infection Level Filter"
-            :items="levels"
-            v-model="levelFilter"
-            style="width: 250px"
-          ></v-select>
-        </div> -->
       </div>
+      <!-- Patients table -->
       <div class="custom-table">
-        <v-data-table
-          :headers="headers"
-          :items="computedItems"
-          hide-default-footer
-        >
+        <v-data-table :headers="headers" :items="patients" hide-default-footer>
+          <!-- User detailes column -->
           <template v-slot:[`item.userimage`]="{ item }">
             <div class="d-flex">
+              <!-- User image -->
               <img :src="item.userimage" class="user-image" />
+              <!-- Username and lastupdate -->
               <div class="pl-3">
-                <p class="mb-0 font-weight-bold">{{ item.username }}</p>
+                <p class="font-weight-bold mb-0">{{ item.username }}</p>
                 <span class="last-update">{{ item.lastupdate }}</span>
               </div>
             </div>
           </template>
+          <!-- Birth detailes column -->
           <template v-slot:[`item.city`]="{ item }">
             <div>
+              <!-- User city -->
               <p class="mb-0 font-weight-bold">{{ item.city }}</p>
+              <!-- User birthday -->
               <span class="user-bd">{{
                 dateFormatConverter(item.birthday)
               }}</span>
             </div>
           </template>
+          <!-- Registeration date column -->
           <template v-slot:[`item.date`]="{ item }">
             <div>
               <p class="mb-0 font-weight-bold">
@@ -46,6 +41,7 @@
               <span class="reg-time">{{ timeFormatConverter(item.time) }}</span>
             </div>
           </template>
+          <!-- Infection level column -->
           <template v-slot:[`item.level`]="{ item }">
             <div>
               <div
@@ -136,6 +132,16 @@ export default {
           birthday: "1970-01-26",
           date: "2020-05-25",
           time: "14:00",
+          level: "High",
+        },
+        {
+          userimage: "/no-photo.png",
+          username: "Sarah bolten",
+          lastupdate: "Updated 8 day ago",
+          city: "Paris",
+          birthday: "1988-05-25",
+          date: "2020-05-18",
+          time: "08:35",
           level: "Normal",
         },
       ],
@@ -148,7 +154,6 @@ export default {
       ],
 
       levels: ["All", "High", "Normal", "Low"],
-      levelFilter: "All",
       monthsName: [
         "January",
         "February",
@@ -188,68 +193,5 @@ export default {
       }
     },
   },
-  computed: {
-    computedItems() {
-      let filtered = [];
-      if (this.levelFilter == "All") {
-        filtered = this.patients;
-      } else {
-        filtered = this.patients.filter((x) => x.level == this.levelFilter);
-      }
-      return filtered;
-    },
-  },
 };
 </script>
-
-<style lang="scss">
-.card {
-  padding: 10px;
-  width: 100%;
-  background-color: white;
-  border-radius: 8px;
-
-  .title {
-    padding: 10px 20px 20px;
-    font-weight: bold;
-    font-size: 19px;
-    color: rgb(54, 55, 64);
-  }
-  .user-image {
-    width: 45px;
-    height: 45px;
-    border-radius: 100%;
-  }
-  .last-update,
-  .user-bd,
-  .reg-time {
-    font-weight: 400;
-    font-size: 0.83rem;
-    color: #9b9c9f;
-  }
-}
-.badge-box {
-  color: #fff;
-  font-size: 12px;
-  border-radius: 15px;
-  width: 60px;
-  text-align: center;
-  padding: 3px 0px;
-}
-.redcolor {
-  background-color: #f12b2c;
-}
-
-.yellowcolor {
-  background-color: #fec400;
-}
-
-.greencolor {
-  background-color: #29cc97;
-}
-th {
-  span {
-    font-size: 0.85rem !important;
-  }
-}
-</style>

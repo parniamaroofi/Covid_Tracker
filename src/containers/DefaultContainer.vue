@@ -31,8 +31,9 @@ export default {
     position: absolute;
     right: 0;
     top: 100px;
-    width: calc(100% - 290px);
+    width: calc(100% - 270px);
     padding: 15px;
+    background-color: #f5f5f5;
   }
 }
 </style>

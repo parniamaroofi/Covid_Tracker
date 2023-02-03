@@ -1,14 +1,19 @@
 <template>
   <div class="overview">
+    <!-- Show loading spinner when data is not loaded -->
     <div v-if="loading" class="w-100 d-flex flex-column mt-10">
-      <semipolar-spinner
-        :animation-duration="1500"
-        :size="70"
-        color="#555555"
+      <half-circle-spinner
+        :animation-duration="1000"
+        :size="65"
+        color="#00acc1"
         class="mx-auto"
       />
+      <p class="primary--text mx-auto mt-5">Getting data...</p>
     </div>
+
+    <!-- Page content -->
     <div v-else>
+      <!-- Boxes of statuses -->
       <v-row>
         <v-col
           v-for="(item, index) in items"
@@ -16,19 +21,23 @@
           md="3"
           sm="6"
           cols="12"
+          class="pt-0"
         >
           <div
             class="box pointer"
             :class="selected == item ? 'bold-box' : ''"
             @click="selectItem(item)"
           >
+            <!-- Box title -->
             <p class="box-title text-capitalize">{{ item }}</p>
+            <!-- Box number -->
             <span class="box-number">{{
               Number(myData[item]).toLocaleString()
             }}</span>
           </div>
         </v-col>
       </v-row>
+      <!-- Chart box -->
       <div class="chart mt-5" v-if="showChart">
         <h3 class="text-center">
           Covid19 <span class="text-capitalize">{{ selected }}</span> Graph
@@ -36,7 +45,6 @@
         <Chart
           name="lineChart"
           type="line"
-          v-if="showChart"
           :chartdata="chartData"
           :options="optionsLine"
           height="150"
@@ -47,12 +55,12 @@
   </div>
 </template>
 <script>
-const Chart = () => import("@/components/Chart/Chart");
-import { SemipolarSpinner } from "epic-spinners";
+const Chart = () => import("@/components/Chart/Chart"); //import chart component
+import { HalfCircleSpinner } from "epic-spinners"; //import loading spinner
 export default {
   components: {
     Chart,
-    SemipolarSpinner,
+    HalfCircleSpinner,
   },
   data() {
     return {
@@ -70,10 +78,11 @@ export default {
             label: "",
             data: [],
             backgroundColor: "#3853ff18",
-            borderColor: "#3751FF",
+            borderColor: "#00ACC1",
           },
         ],
       },
+      //Chart Options
       optionsLine: {
         responsive: true,
         maintainAspectRatio: true,
@@ -148,6 +157,7 @@ export default {
     };
   },
   methods: {
+    // the function to get the data that is needed to show it inside the page
     getData() {
       this.loading = true;
       this.$http
@@ -172,9 +182,22 @@ export default {
           this.loading = false;
         });
     },
+    // the function to preparing chart data
     getCartData(selected) {
       this.showChart = false;
       let variable;
+      this.chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: "",
+            data: [],
+            backgroundColor: "#3853ff18",
+            borderColor: "#00ACC1",
+          },
+        ],
+      };
+
       switch (selected) {
         case "total":
           variable = "TotalConfirmed";
@@ -192,17 +215,7 @@ export default {
         default:
           break;
       }
-      this.chartData = {
-        labels: [],
-        datasets: [
-          {
-            label: "",
-            data: [],
-            backgroundColor: "#3853ff18",
-            borderColor: "#3751FF",
-          },
-        ],
-      };
+
       for (let cnt in this.countries) {
         let countryName = this.countries[cnt].Country;
         this.chartData.labels.push(countryName);
@@ -215,6 +228,7 @@ export default {
         this.showChart = true;
       }, 100);
     },
+    // the function to select one box and show relevant chart
     selectItem(item) {
       this.selected = item;
       this.getCartData(item);
@@ -225,98 +239,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-* {
-  font-family: Mulish !important;
-}
-@font-face {
-  font-family: Mulish;
-  src: url("/Mulish-Light.ttf");
-}
-.box {
-  background-color: white;
-  border: 1px solid #fff;
-  border-radius: 12px;
-  width: 99%;
-  height: 140px;
-  text-align: center;
-  position: relative;
-
-  &::before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 0;
-    width: 0;
-    border-radius: 12px;
-    border: 8px solid transparent;
-    box-sizing: border-box;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 0;
-    width: 0;
-    border-radius: 12px;
-    border: 8px solid transparent;
-    box-sizing: border-box;
-  }
-
-  &:hover {
-    &::before {
-      width: 100%;
-      height: 100%;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      border-right: 0;
-      border-bottom: 0;
-      transition: height 0.2s linear, width 0.2s linear 0.2s;
-    }
-    &::after {
-      width: 100%;
-      height: 100%;
-      border: 3px solid #ccc;
-      border-radius: 12px;
-      border-left: 0;
-      border-top: 0;
-      transition: height 0.2s linear, width 0.2s linear 0.2s;
-    }
-  }
-
-  &-title {
-    font-size: 22px;
-    color: #9fa2b4;
-    font-weight: bold;
-    margin: 20px 0 5px 0;
-  }
-
-  &-number {
-    font-size: 32px;
-    font-weight: bold;
-  }
-
-  &.bold-box {
-    border: 3px solid #3751ff;
-    .box-title,
-    .box-number {
-      color: #3751ff;
-    }
-    &::before,
-    &::after {
-      display: none !important;
-    }
-  }
-}
-.chart {
-  padding: 20px 15px 15px;
-  width: 100%;
-  background-color: white;
-  border: 1px solid #fff;
-  border-radius: 8px;
-}
-</style>

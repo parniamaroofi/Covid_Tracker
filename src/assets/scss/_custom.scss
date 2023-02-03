@@ -25,3 +25,143 @@ body {
 .pointer {
   cursor: pointer;
 }
+
+// Overview page styles
+.box {
+  background-color: white;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  width: 99%;
+  height: 130px;
+  text-align: center;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+    border-radius: 12px;
+    border: 8px solid transparent;
+    box-sizing: border-box;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 0;
+    width: 0;
+    border-radius: 12px;
+    border: 8px solid transparent;
+    box-sizing: border-box;
+  }
+
+  &:hover {
+    &::before {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      border-right: 0;
+      border-bottom: 0;
+      transition: height 0.2s linear, width 0.2s linear 0.2s;
+    }
+    &::after {
+      width: 100%;
+      height: 100%;
+      border: 3px solid #ccc;
+      border-radius: 12px;
+      border-left: 0;
+      border-top: 0;
+      transition: height 0.2s linear, width 0.2s linear 0.2s;
+    }
+  }
+
+  &-title {
+    font-size: 19px;
+    color: #9fa2b4;
+    font-weight: bold;
+    margin: 18px 0 5px 0;
+  }
+
+  &-number {
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  &.bold-box {
+    border: 3px solid #00acc1;
+    .box-title,
+    .box-number {
+      color: #00acc1;
+    }
+    &::before,
+    &::after {
+      display: none !important;
+    }
+  }
+}
+.chart {
+  padding: 20px 15px 15px;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #fff;
+  border-radius: 8px;
+}
+
+// Patient page styles
+.patients {
+  .card {
+    padding: 10px;
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+
+    .title {
+      padding: 10px 20px 20px;
+      font-weight: bold;
+      font-size: 19px;
+      color: rgb(54, 55, 64);
+    }
+    .user-image {
+      width: 45px;
+      height: 45px;
+      border-radius: 100%;
+    }
+    .last-update,
+    .user-bd,
+    .reg-time {
+      font-weight: bold;
+      font-size: 0.77rem;
+      color: #9b9c9f;
+    }
+  }
+  .badge-box {
+    color: #fff;
+    font-size: 12px;
+    border-radius: 15px;
+    width: 60px;
+    text-align: center;
+    padding: 3px 0px;
+  }
+  .redcolor {
+    background-color: #f12b2c;
+  }
+
+  .yellowcolor {
+    background-color: #fec400;
+  }
+
+  .greencolor {
+    background-color: #29cc97;
+  }
+  th {
+    span {
+      font-size: 0.85rem !important;
+    }
+  }
+}

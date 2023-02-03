@@ -46,7 +46,7 @@ export default {
   position: fixed;
   left: 0px;
   top: 0px;
-  width: 290px;
+  width: 270px;
   height: 100vh;
   border-right: 1px solid #adb1c25f;
   background-color: #363740;
@@ -58,12 +58,12 @@ export default {
     display: flex;
     justify-content: center;
     margin-bottom: 30px;
-    font-size: 23px;
+    font-size: 20px;
     color: #a5a5a5;
     font-weight: bold;
     padding: 16px 28px 16px 20px;
     img {
-      width: 40px;
+      width: 38px;
       margin-right: 10px;
     }
   }
@@ -80,7 +80,7 @@ export default {
       cursor: pointer;
       color: #9293a0;
       padding-left: 40px;
-      font-size: 18px;
+      font-size: 0.9rem;
       border-left: 3px solid #363740;
       path {
         stroke: #9293a0;
